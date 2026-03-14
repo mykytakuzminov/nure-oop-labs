@@ -1,0 +1,31 @@
+# Executables and binary files
+*.exe
+*.out
+*.app
+main
+
+# Object files and libraries
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+
+# Build directories (CMake)
+/build/
+/out/
+CMakeSettings.json
+CMakeUserPresets.json
+
+# IDE
+.vscode/
+.idea/
+*.user
+*.suo
+*.sln
+*.vcxproj
+
+# Logs and temporary files
+*.log
+.DS_Store
