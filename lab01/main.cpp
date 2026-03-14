@@ -8,170 +8,194 @@ private:
     {
         int data;
         Node *next;
-        Node(int val): data(val), next(nullptr) {}
+        Node(int val);
     };
 
     int size = 0;
     Node *head = nullptr;
     Node *tail = nullptr;
 
-    void CheckHead() const
-    {
-        if (!head)
-        {
-            throw std::runtime_error("Queue is empty!");
-        }
-    }
+    void CheckHead() const;
 
 public:
-    Queue() {}
+    Queue();
+    Queue(int val);
+    Queue(int arr[], int arrSize);
+    Queue(const Queue &other);
+    Queue(Queue &&other);
+    ~Queue();
 
-    Queue(int val)
-    {
-        Enqueue(val);
-    }
+    Queue &operator=(const Queue &other);
 
-    Queue(int arr[], int arrSize)
-    {
-        for (int i = 0; i < arrSize; i++)
-        {
-            Enqueue(arr[i]);
-        }
-    }
-
-    Queue(const Queue &other)
-    {
-        Node *temp = other.head;
-        while (temp)
-        {
-            Enqueue(temp->data);
-            temp = temp->next;
-        }
-    }
-
-    Queue(Queue &&other) : head(other.head), tail(other.tail), size(other.size)
-    {
-        other.head = nullptr;
-        other.tail = nullptr;
-        other.size = 0;
-    }
-
-    Queue &operator=(const Queue &other)
-    {
-        if (this == &other)
-            return *this;
-
-        while (head)
-            Dequeue();
-
-        Node *temp = other.head;
-        while (temp)
-        {
-            Enqueue(temp->data);
-            temp = temp->next;
-        }
-
-        return *this;
-    }
-
-    int Peek() const
-    {
-        CheckHead();
-        return head->data;
-    }
-
-    void Enqueue(int val)
-    {
-        Node *node = new Node(val);
-
-        if (!head && !tail)
-        {
-            head = node;
-            tail = node;
-        }
-        else
-        {
-            tail->next = node;
-            tail = node;
-        }
-
-        size += 1;
-    }
-
-    int Dequeue()
-    {
-        CheckHead();
-
-        Node *temp = head;
-        int val = head->data;
-
-        head = head->next;
-        if (!head)
-            tail = nullptr;
-
-        size -= 1;
-
-        delete temp;
-        return val;
-    }
-
-    int GetAt(int index) const
-    {
-        if (index < 0 || index >= size)
-        {
-            throw std::out_of_range("Index out of bounds!");
-        }
-
-        Node *temp = head;
-        for (int i = 0; i < index; i++)
-            temp = temp->next;
-        return temp->data;
-    }
-
-    bool IsEqual(const Queue &other) const
-    {
-        if (size != other.size)
-            return false;
-
-        Node *temp1 = head;
-        Node *temp2 = other.head;
-
-        for (int i = 0; i < size; i++)
-        {
-            if (GetAt(i) != other.GetAt(i))
-                return false;
-        }
-
-        return true;
-    }
-
-    void Print() const
-    {
-        if (!head)
-        {
-            std::cout << "Queue is empty." << std::endl;
-            return;
-        }
-
-        Node *temp = head;
-        while (temp)
-        {
-            std::cout << temp->data << " -> ";
-            temp = temp->next;
-        }
-        std::cout << "nullptr" << std::endl;
-    }
-
-    ~Queue()
-    {
-        while (head)
-        {
-            Node *temp = head;
-            head = head->next;
-            delete temp;
-        }
-    }
+    void Enqueue(int val);
+    int Dequeue();
+    int Peek() const;
+    int GetAt(int index) const;
+    bool IsEqual(const Queue &other) const;
+    void Print() const;
 };
+
+Queue::Node::Node(int val)
+{
+    data = val;
+    next = nullptr;
+}
+
+void Queue::CheckHead() const
+{
+    if (!head)
+        throw std::runtime_error("Queue is empty!");
+}
+
+Queue::Queue() {}
+
+Queue::Queue(int val)
+{
+    Enqueue(val);
+}
+
+Queue::Queue(int arr[], int arrSize)
+{
+    for (int i = 0; i < arrSize; i++)
+        Enqueue(arr[i]);
+}
+
+Queue::Queue(const Queue &other)
+{
+    Node *temp = other.head;
+    while (temp)
+    {
+        Enqueue(temp->data);
+        temp = temp->next;
+    }
+}
+
+Queue::Queue(Queue &&other)
+{
+    head = other.head;
+    tail = other.tail;
+    size = other.size;
+
+    other.head = nullptr;
+    other.tail = nullptr;
+    other.size = 0;
+}
+
+Queue::~Queue()
+{
+    while (head)
+    {
+        Node *temp = head;
+        head = head->next;
+        delete temp;
+    }
+}
+
+Queue &Queue::operator=(const Queue &other)
+{
+    if (this == &other)
+        return *this;
+
+    while (head)
+        Dequeue();
+
+    Node *temp = other.head;
+    while (temp)
+    {
+        Enqueue(temp->data);
+        temp = temp->next;
+    }
+
+    return *this;
+}
+
+void Queue::Enqueue(int val)
+{
+    Node *node = new Node(val);
+
+    if (!head && !tail)
+    {
+        head = node;
+        tail = node;
+    }
+    else
+    {
+        tail->next = node;
+        tail = node;
+    }
+
+    size += 1;
+}
+
+int Queue::Dequeue()
+{
+    CheckHead();
+
+    Node *temp = head;
+    int val = head->data;
+
+    head = head->next;
+    if (!head)
+        tail = nullptr;
+
+    size -= 1;
+
+    delete temp;
+    return val;
+}
+
+int Queue::Peek() const
+{
+    CheckHead();
+    return head->data;
+}
+
+int Queue::GetAt(int index) const
+{
+    if (index < 0 || index >= size)
+    {
+        throw std::out_of_range("Index out of bounds!");
+    }
+
+    Node *temp = head;
+    for (int i = 0; i < index; i++)
+        temp = temp->next;
+    return temp->data;
+}
+
+bool Queue::IsEqual(const Queue &other) const
+{
+    if (size != other.size)
+        return false;
+
+    Node *temp1 = head;
+    Node *temp2 = other.head;
+
+    for (int i = 0; i < size; i++)
+    {
+        if (GetAt(i) != other.GetAt(i))
+            return false;
+    }
+
+    return true;
+}
+
+void Queue::Print() const
+{
+    if (!head)
+    {
+        std::cout << "Queue is empty." << std::endl;
+        return;
+    }
+
+    Node *temp = head;
+    while (temp)
+    {
+        std::cout << temp->data << " -> ";
+        temp = temp->next;
+    }
+    std::cout << "nullptr" << std::endl;
+}
 
 int main()
 {
@@ -213,14 +237,14 @@ int main()
         std::cout << "Dequeue value from q1: ";
         q1.Print();
 
-        std::cout << "Peek value from q1 without removing it: " << q1.Peek() << std::endl;
-        std::cout << "Get value at index 1: " << q1.GetAt(1) << std::endl;
-        std::cout << "q1 (to check): ";
+        std::cout << "Peek value from q1 without removing it: " << q1.Peek();
+        std::cout << "\nGet value at index 1: " << q1.GetAt(1);
+        std::cout << "\nq1 (to check): ";
         q1.Print();
 
-        std::cout << "q1 is equal q3 (0 - false, 1 - true): " << q1.IsEqual(q3) << std::endl;
+        std::cout << "nq1 is equal q3 (0 - false, 1 - true): " << q1.IsEqual(q3);
     }
-    catch (const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << "Error: " << e.what() << std::endl;
     }
