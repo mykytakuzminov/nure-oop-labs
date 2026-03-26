@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdexcept>
 
+using namespace std;
+
 class Queue
 {
 private:
@@ -18,11 +20,17 @@ private:
     void CheckHead() const;
 
 public:
+    // default constructor
     Queue();
+    // parameterized constructor
     Queue(int val);
+    // array constructor
     Queue(int arr[], int arrSize);
+    // copy constructor
     Queue(const Queue &other);
+    // move constructor
     Queue(Queue &&other);
+    // destructor
     ~Queue();
 
     Queue &operator=(const Queue &other);
@@ -93,12 +101,15 @@ Queue::~Queue()
 
 Queue &Queue::operator=(const Queue &other)
 {
+    // self assignment
     if (this == &other)
         return *this;
 
+    // removes everything from current Queue
     while (head)
         Dequeue();
 
+    // copies everything from another Queue
     Node *temp = other.head;
     while (temp)
     {
@@ -113,6 +124,7 @@ void Queue::Enqueue(int val)
 {
     Node *node = new Node(val);
 
+    // head and tail are empty
     if (!head && !tail)
     {
         head = node;
@@ -165,12 +177,14 @@ int Queue::GetAt(int index) const
 
 bool Queue::IsEqual(const Queue &other) const
 {
+    // checks frist size
     if (size != other.size)
         return false;
 
     Node *temp1 = head;
     Node *temp2 = other.head;
 
+    // checks coresponding values of Queues
     for (int i = 0; i < size; i++)
     {
         if (GetAt(i) != other.GetAt(i))
@@ -202,51 +216,51 @@ int main()
     try
     {
         Queue q1;
-        std::cout << "Queue 1 (empty): ";
+        cout << "Queue 1 (empty): ";
         q1.Print();
 
         Queue q2(5);
-        std::cout << "Queue 2 (with initial value): ";
+        cout << "Queue 2 (with initial value): ";
         q2.Print();
 
         int arr[] = {5, 2, 0, 8, 4, 2};
         int arrSize = 6;
 
         Queue q3(arr, arrSize);
-        std::cout << "Queue 3 (from array): ";
+        cout << "Queue 3 (from array): ";
         q3.Print();
 
         Queue q4(q3);
         Queue q5 = q3;
-        std::cout << "Queue 4 (copy init): ";
+        cout << "Queue 4 (copy init): ";
         q4.Print();
-        std::cout << "Queue 4 (copy init with operator): ";
+        cout << "Queue 4 (copy init with operator): ";
         q5.Print();
 
         Queue q6 = Queue(10);
-        std::cout << "Queue 6 (move init): ";
+        cout << "Queue 6 (move init): ";
         q6.Print();
 
         q1.Enqueue(1);
         q1.Enqueue(2);
         q1.Enqueue(3);
-        std::cout << "Enqueue some values to q1: ";
+        cout << "Enqueue some values to q1: ";
         q1.Print();
 
         q1.Dequeue();
-        std::cout << "Dequeue value from q1: ";
+        cout << "Dequeue value from q1: ";
         q1.Print();
 
-        std::cout << "Peek value from q1 without removing it: " << q1.Peek();
-        std::cout << "\nGet value at index 1: " << q1.GetAt(1);
-        std::cout << "\nq1 (to check): ";
+        cout << "Peek value from q1 without removing it: " << q1.Peek();
+        cout << "\nGet value at index 1: " << q1.GetAt(1);
+        cout << "\nq1 (to check): ";
         q1.Print();
 
-        std::cout << "nq1 is equal q3 (0 - false, 1 - true): " << q1.IsEqual(q3);
+        cout << "nq1 is equal q3 (0 - false, 1 - true): " << q1.IsEqual(q3) << endl;
     }
-    catch (const std::exception &e)
+    catch (const exception &e)
     {
-        std::cerr << "Error: " << e.what() << std::endl;
+        cerr << "Error: " << e.what() << endl;
     }
 
     return 0;
