@@ -94,6 +94,27 @@ public:
         return 0.0;
     }
 
+    bool operator==(SparseVector& other) const {
+        if (this->dimension != other.dimension) return false;
+
+        Node* currentLeft = this->head;
+        Node* currentRight = other.head;
+
+        while(currentLeft && currentRight) {
+            if (currentLeft->index != currentRight->index) return false;
+            if (currentLeft->value != currentRight->value) return false;
+
+            currentLeft = currentLeft->next;
+            currentRight = currentRight->next;
+        }
+
+        return currentLeft == nullptr && currentRight == nullptr;
+    }
+
+    bool operator!=(SparseVector& other) const {
+        return !(*this == other);
+    }
+
     friend ostream& operator<<(ostream& os, const SparseVector& v) {
         Node* current = v.head;
         os << "[";
@@ -155,12 +176,17 @@ int main() {
     int dimension = 5;
     double* arr = new double[dimension]{1.0, 0.0, 0.0, 2.0, 0.0};
 
-    SparseVector vector = SparseVector(dimension, arr);
+    SparseVector vector1 = SparseVector(dimension, arr);
+    SparseVector vector2 = vector1;
 
-    cout << vector;
-    cin >> vector;
-    cout << vector;
-    cout << vector[0] << endl;
+    cout << vector1;
+    cout << vector2;
+
+    cout << ((vector1 == vector2) ? "Yes" : "No") << endl;
+
+    cin >> vector2;
+
+    cout << ((vector1 == vector2) ? "Yes" : "No") << endl;
 
     delete[] arr;
 
