@@ -115,6 +115,57 @@ public:
         return !(*this == other);
     }
 
+    SparseVector operator+(const SparseVector& other) const {
+        if (this->dimension != other.dimension) {
+            throw invalid_argument("Vectors must have the same dimensions");
+        }
+
+        SparseVector newVector = SparseVector(this->dimension);
+
+        for (int i = 0; i < this->dimension; i++) {
+            double value = (*this)[i] + other[i];
+            newVector.Append(i, value);
+        }
+
+        return newVector;
+    }
+
+    SparseVector operator-(const SparseVector& other) const {
+        if (this->dimension != other.dimension) {
+            throw invalid_argument("Vectors must have the same dimensions");
+        }
+
+        SparseVector newVector = SparseVector(this->dimension);
+
+        for (int i = 0; i < this->dimension; i++) {
+            double value = (*this)[i] - other[i];
+            newVector.Append(i, value);
+        }
+
+        return newVector;
+    }
+
+    SparseVector operator*(const double scalar) const {
+        SparseVector newVector = SparseVector(this->dimension);
+
+        for (int i = 0; i < this->dimension; i++) {
+            double value = (*this)[i] * scalar;
+            newVector.Append(i, value);
+        }
+
+        return newVector;
+    }
+
+    operator double*() const {
+        double* arr = new double[this->dimension]{};
+        Node* current = this->head;
+        while(current) {
+            arr[current->index] = current->value;
+            current = current->next;
+        }
+        return arr;
+    }
+
     friend ostream& operator<<(ostream& os, const SparseVector& v) {
         Node* current = v.head;
         os << "[";
@@ -142,6 +193,22 @@ public:
             v.Append(i, value);
         }
         return is;
+    }
+
+    double Dot(const SparseVector& other) const {
+        if (this->dimension != other.dimension) {
+            throw invalid_argument("Vectors must have the same dimensions");
+        }
+
+        double dotProduct = 0.0;
+
+        Node* current = this->head;
+        while(current) {
+            dotProduct += current->value * other[current->index];
+            current = current->next;
+        }
+
+        return dotProduct;
     }
 
 private:
