@@ -240,22 +240,56 @@ private:
 };
 
 int main() {
-    int dimension = 5;
-    double* arr = new double[dimension]{1.0, 0.0, 0.0, 2.0, 0.0};
+    cout << "=== Creating vectors ===" << endl;
+    double* arr1 = new double[5]{1.0, 0.0, 0.0, 2.0, 0.0};
+    double* arr2 = new double[5]{0.0, 3.0, 0.0, 2.0, 5.0};
 
-    SparseVector vector1 = SparseVector(dimension, arr);
-    SparseVector vector2 = vector1;
+    SparseVector v1(5, arr1);
+    SparseVector v2(5, arr2);
 
-    cout << vector1;
-    cout << vector2;
+    cout << "v1 = " << v1;
+    cout << "v2 = " << v2;
 
-    cout << ((vector1 == vector2) ? "Yes" : "No") << endl;
+    cout << "\n=== Copy constructor ===" << endl;
+    SparseVector v3 = v1;
+    cout << "v3 (copy of v1) = " << v3;
 
-    cin >> vector2;
+    cout << "\n=== operator[] ===" << endl;
+    cout << "v1[0] = " << v1[0] << endl;
+    cout << "v1[3] = " << v1[3] << endl;
 
-    cout << ((vector1 == vector2) ? "Yes" : "No") << endl;
+    cout << "\n=== Arithmetic ===" << endl;
+    cout << "v1 + v2 = " << (v1 + v2);
+    cout << "v1 - v2 = " << (v1 - v2);
+    cout << "v1 * 2.0 = " << (v1 * 2.0);
 
-    delete[] arr;
+    cout << "\n=== Dot product ===" << endl;
+    cout << "v1 . v2 = " << v1.Dot(v2) << endl;
+
+    cout << "\n=== Comparison ===" << endl;
+    cout << "v1 == v2: " << ((v1 == v2) ? "Yes" : "No") << endl;
+    cout << "v1 != v2: " << ((v1 != v2) ? "Yes" : "No") << endl;
+    cout << "v1 == v3: " << ((v1 == v3) ? "Yes" : "No") << endl;
+
+    cout << "\n=== Type conversion to double* ===" << endl;
+    double* arr3 = (double*)v1;
+    for (int i = 0; i < 5; i++) {
+        cout << arr3[i] << " ";
+    }
+    cout << endl;
+
+    cout << "\n=== Move assignment ===" << endl;
+    SparseVector v4 = SparseVector(5, arr1);
+    cout << "v4 (moved from v1) = " << v4;
+
+    cout << "\n=== Input ===" << endl;
+    SparseVector v5(5);
+    cin >> v5;
+    cout << "v5 = " << v5;
+
+    delete[] arr1;
+    delete[] arr2;
+    delete[] arr3;
 
     return 0;
 }
