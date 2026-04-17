@@ -32,15 +32,67 @@ public:
 
     SparseVector(int dimension, double* arr) {
         this->dimension = dimension;
+        this->head = nullptr;
 
         for (int i = 0; i < dimension; i++) {
             this->Append(i, arr[i]);
         }
     }
 
+    SparseVector(const SparseVector& other) {
+        this->dimension = other.dimension;
+        this->head = nullptr;
+
+        Node* current = other.head;
+        while(current) {
+            this->Append(current->index, current->value);
+            current = current->next;
+        }
+    }
+
     ~SparseVector() {
         this->Clear();
     };
+
+    SparseVector& operator=(const SparseVector& other) {
+        if (this == &other) return *this;
+
+        this->Clear();
+        this->dimension = other.dimension;
+        Node* current = other.head;
+        while(current) {
+            this->Append(current->index, current->value);
+            current = current->next;
+        }
+
+        return *this;
+    }
+
+    SparseVector& operator=(SparseVector&& other) {
+        if (this == &other) return *this;
+
+        this->Clear();
+        this->dimension = other.dimension;
+        this->head = other.head;
+
+        other.head = nullptr;
+        other.dimension = 0;
+        return *this;
+    }
+
+    double operator[](int i) const {
+        if (i < 0 || i >= this->dimension) {
+            throw out_of_range("Index is out of range");
+        }
+
+        Node* current = this->head;
+        while(current) {
+            if (current->index == i) return current->value;
+            current = current->next;
+        }
+
+        return 0.0;
+    }
 
     friend ostream& operator<<(ostream& os, const SparseVector& v) {
         Node* current = v.head;
@@ -103,13 +155,13 @@ int main() {
     int dimension = 5;
     double* arr = new double[dimension]{1.0, 0.0, 0.0, 2.0, 0.0};
 
-    SparseVector* vector = new SparseVector(dimension, arr);
+    SparseVector vector = SparseVector(dimension, arr);
 
-    cout << *vector;
-    cin >> *vector;
-    cout << *vector;
+    cout << vector;
+    cin >> vector;
+    cout << vector;
+    cout << vector[0] << endl;
 
-    delete vector;
     delete[] arr;
 
     return 0;
